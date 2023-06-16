@@ -1,7 +1,76 @@
 <!DOCTYPE html>
-<head html-src="./comp/head.html">
+<head>
+    <style>
+        * {
+            /* CSS HEX */
+            --color-bg: #343434ff;
+            --color-fg: #f7fff7ff;
+            --color-theme: #2f3061ff;
+            --color-highlight: #ffe66dff;
+            --color-light: #6ca6c1ff;
+            --font-size: 16px;
+            --font-family: helvetica, arial;
+        }
 
+        /* Elements */
+        button {
+            border: 0px none transparent;
+            background-color: var(--color-theme);
+            color: var(--color-fg);
+        }
+
+        /* Layouts */
+
+        body {
+            padding: 0;
+            margin: 0;
+            font-size: var(--font-size);
+            font-family: var(--font-family);
+            background-color: var(--color-bg);
+            color: var(--color-fg);
+        }
+
+        nav {
+            display: flex;
+        }
+        nav > button {
+            flex: 1;
+            margin: 0;
+            height: 2rem;
+            font-size: var(--font-size);
+        }
+        nav > button:hover {
+            background-color: var(--color-light);
+            color: var(--color-theme);
+        }
+
+        #search {
+            display: none;
+        }
+
+        #recipe {
+            display: none;
+        }
+    </style>
 </head>
-<body onload="loadComp()">
 
+<body>
+    <header>
+        <nav>
+            <button onclick="navTo('browse')">BROWSE</button>
+            <button onclick="navTo('search')">SEARCH</button>
+        </nav>
+    </header>
+    <main>
+        <div id="browse"></div>
+        <div id="search"></div>
+        <div id="recipe"></div>
+    </main>
 </body>
+
+<script>
+function navTo(nav) {
+    ['browse', 'search', 'recipe'].forEach(id => document.getElementById(id).style.display = 'none')
+    document.getElementById(nav).style.display = 'block';
+}
+</script>
