@@ -9,7 +9,7 @@
             --color-highlight: #ffe66dff;
             --color-light: #6ca6c1ff;
             --font-size: 16px;
-            --font-family: helvetica, arial;
+            font-family: helvetica, arial;
         }
 
         /* Elements */
@@ -17,6 +17,18 @@
             border: 0px none transparent;
             background-color: var(--color-theme);
             color: var(--color-fg);
+            font-size: var(--font-size);
+        }
+
+        form {
+            border: 1px solid var(--color-fg);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+
+        p {
+            font-size: var(--font-size);
         }
 
         /* Layouts */
@@ -44,7 +56,11 @@
             color: var(--color-theme);
         }
 
-        #search {
+        main {
+            padding: 1rem;
+        }
+
+        #browse {
             display: none;
         }
 
@@ -57,13 +73,24 @@
 <body>
     <header>
         <nav>
-            <button onclick="navTo('browse')">BROWSE</button>
             <button onclick="navTo('search')">SEARCH</button>
+            <button onclick="navTo('browse')">BROWSE</button>
         </nav>
     </header>
     <main>
+        <div id="search">
+            <form>
+                <button>Search by name</button>
+            </form>
+            <form>
+                <p>The only ingredient we assume you have is salt, peper, and ✨determination✨.</p>
+                <ul>
+                    <li><button>Add ingredient</button></li>
+                </ul>
+                <button>Search by ingredients</button>
+            </form>
+        </div>
         <div id="browse"></div>
-        <div id="search"></div>
         <div id="recipe"></div>
     </main>
 </body>
