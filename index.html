@@ -61,9 +61,12 @@
         main {
             padding: 1rem;
         }
-
-        #browse {
-            display: none;
+        
+        .recipe table { border-collapse: collapse; }
+        .recipe tr { border: none; }
+        .recipe th, .recipe td {
+            border-right: solid 1px #f00; 
+            border-left: solid 1px #f00;
         }
 
         #recipe {
@@ -81,9 +84,10 @@
     </header>
     <main>
         <div id="search">
-            <form>
-                <button>Search by name</button>
-            </form>
+            <label>
+                Search by name:
+                <input type="text" oninput="searchNameInput(this.value)">
+            </label>
             <form>
                 <p>The only ingredient we assume you have is salt, peper, and ✨determination✨.</p>
                 <ul>
@@ -104,17 +108,41 @@ function navTo(nav) {
     document.getElementById(nav).style.display = 'block';
 }
 
+function searchNameInput(value) {
+    let results = nameSearch(recipes, value);
+    let html = ''
+    results.forEach(recipe => {
+        html += `<div class="recipe">
+            <table>
+                <tr>
+                    <th>Prep time</th>
+                    <th>Cook time</th>
+                    <th>Servings</th>
+                </tr>
+                <tr>
+                    <td>${recipe.prepTime} minutes</td>
+                    <td>${recipe.cookTime} minutes</td>
+                    <td>${recipe.servings}</td>
+                </tr>
+            </table>
+        </div>`
+    });
+    document.getElementById('browse').innerHTML = html;
+}
+
 async function displayRecipe(id) {
+    let recipe = recipes[id];
     const response = await fetch(`./recipes/${id}.html`);
     const html = await response.text();
-    document.getElementById('recipe').innerHTML = html;
+    document.getElementById('recipe').innerHTML = `<h1>${recipe.name}</h1>`
+    document.getElementById('recipe').innerHTML += html;
     navTo('recipe');
 }
 
 // back-end functions
 function nameSearch(source, query, match) {
     // match: exact match or not
-    let result = [];
+    let results = [];
     query = query.toLowerCase()
     source.forEach((elm, id) => {
         if (
@@ -122,9 +150,9 @@ function nameSearch(source, query, match) {
             || (match && elm.name.toLowerCase() == query)
         ) {
             elm.id = id;
-            result.push(elm);
+            results.push(elm);
         }
     });
-    return result;
+    return results;
 }
 </script>
