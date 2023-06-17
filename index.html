@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <head>
+    <script src="./data/id.js"></script>
+    <script src="./data/recipes.js"></script>
     <style>
         * {
             /* CSS HEX */
@@ -96,8 +98,33 @@
 </body>
 
 <script>
+// UI functions
 function navTo(nav) {
     ['browse', 'search', 'recipe'].forEach(id => document.getElementById(id).style.display = 'none')
     document.getElementById(nav).style.display = 'block';
+}
+
+async function displayRecipe(id) {
+    const response = await fetch(`./recipes/${id}.html`);
+    const html = await response.text();
+    document.getElementById('recipe').innerHTML = html;
+    navTo('recipe');
+}
+
+// back-end functions
+function nameSearch(source, query, match) {
+    // match: exact match or not
+    let result = [];
+    query = query.toLowerCase()
+    source.forEach((elm, id) => {
+        if (
+            elm.name.toLowerCase().search(query) != -1
+            || (match && elm.name.toLowerCase() == query)
+        ) {
+            elm.id = id;
+            result.push(elm);
+        }
+    });
+    return result;
 }
 </script>
