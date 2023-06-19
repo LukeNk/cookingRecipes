@@ -15,11 +15,29 @@
         }
 
         /* Elements */
+
+        article table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        article tr { border: none; }
+        article th, article td {
+            border-right: solid 1px var(--color-highlight); 
+            border-left: solid 1px var(--color-highlight);
+            text-align: center;
+        }
+
         button {
             border: 0px none transparent;
             background-color: var(--color-theme);
             color: var(--color-fg);
             font-size: var(--font-size);
+        }
+
+        details {
+            border-left: 1rem solid var(--color-light);
+            border-bottom: 1px solid var(--color-light);
+            padding-left: 1rem;
         }
 
         form {
@@ -29,8 +47,24 @@
             padding: 1rem;
         }
 
+        input {
+            font-size: var(--font-size);
+            outline: none;
+            border: 1px solid var(--color-highlight);
+            background-color: var(--color-bg);
+            color: var(--color-fg);
+        }
+
         p {
             font-size: var(--font-size);
+        }
+
+        span {
+            font-size: var(--font-size);
+        }
+
+        summary {
+            cursor: pointer;
         }
 
         /* Layouts */
@@ -61,25 +95,14 @@
         main {
             padding: 1rem;
         }
-        
-        .recipe table { border-collapse: collapse; }
-        .recipe tr { border: none; }
-        .recipe th, .recipe td {
-            border-right: solid 1px #f00; 
-            border-left: solid 1px #f00;
-        }
-
-        #recipe {
-            display: none;
-        }
     </style>
 </head>
 
 <body>
     <header>
         <nav>
-            <button onclick="navTo('search')">SEARCH</button>
-            <button onclick="navTo('browse')">BROWSE</button>
+            <button onclick="">SEARCH</button>
+            <button onclick="">BROWSE</button>
         </nav>
     </header>
     <main>
@@ -88,44 +111,60 @@
                 Search by name:
                 <input type="text" oninput="searchNameInput(this.value)">
             </label>
-            <form>
-                <p>The only ingredient we assume you have is salt, peper, and ✨determination✨.</p>
-                <ul>
-                    <li><button>Add ingredient</button></li>
-                </ul>
-                <button>Search by ingredients</button>
-            </form>
+            <p>The only ingredient we assume you have is salt, peper, and ✨determination✨.</p>
+            <ul id="ingredientsSearch">
+                <li><button onclick="ingredientsSearchAdd()">Add ingredient</button></li>
+            </ul>
+            <button>Search by ingredients</button>
         </div>
+        <hr>
         <div id="browse"></div>
-        <div id="recipe"></div>
     </main>
 </body>
 
 <script>
 // UI functions
-function navTo(nav) {
-    ['browse', 'search', 'recipe'].forEach(id => document.getElementById(id).style.display = 'none')
-    document.getElementById(nav).style.display = 'block';
+function searchNameInput(query) {
+    displayRecipes(nameSearch(recipes, query))
 }
 
-function searchNameInput(value) {
-    let results = nameSearch(recipes, value);
+
+function ingredientsSearchAdd() {
+    document.getElementById('ingredientsSearch').innerHTML += `
+    <li>
+        <input oninput="ingredientsSearchInput(this)"><span></span>
+    </li>`
+}
+
+function ingredientsSearchInput(that) {
+    let result = nameSearch(ingredients, that.value, true);
+    let span = that.nextSibling;
+    if (result.length != 0) span.innerHTML = 'Item found';
+    else span.innerHTML = 'Item not found'
+}
+
+function displayRecipes(recipes) {
     let html = ''
-    results.forEach(recipe => {
-        html += `<div class="recipe">
-            <table>
-                <tr>
-                    <th>Prep time</th>
-                    <th>Cook time</th>
-                    <th>Servings</th>
-                </tr>
-                <tr>
-                    <td>${recipe.prepTime} minutes</td>
-                    <td>${recipe.cookTime} minutes</td>
-                    <td>${recipe.servings}</td>
-                </tr>
-            </table>
-        </div>`
+    recipes.forEach(recipe => {
+        html += `
+        <article>
+            <details id="recipe-${recipe.id}">
+                <summary>${recipe.name}</summary>
+                <table>
+                    <tr>
+                        <th>Prep time</th>
+                        <th>Cook time</th>
+                        <th>Servings</th>
+                    </tr>
+                    <tr>
+                        <td>${recipe.prepTime} minutes</td>
+                        <td>${recipe.cookTime} minutes</td>
+                        <td>${recipe.servings}</td>
+                    </tr>
+                </table>
+            </details>
+        </article>`;
+        displayRecipe(recipe.id);
     });
     document.getElementById('browse').innerHTML = html;
 }
@@ -134,9 +173,7 @@ async function displayRecipe(id) {
     let recipe = recipes[id];
     const response = await fetch(`./recipes/${id}.html`);
     const html = await response.text();
-    document.getElementById('recipe').innerHTML = `<h1>${recipe.name}</h1>`
-    document.getElementById('recipe').innerHTML += html;
-    navTo('recipe');
+    document.getElementById(`recipe-${id}`).innerHTML += html;
 }
 
 // back-end functions
@@ -147,8 +184,8 @@ function nameSearch(source, query, match) {
     source.forEach((elm, id) => {
         if (
             elm.name.toLowerCase().search(query) != -1
-            || (match && elm.name.toLowerCase() == query)
         ) {
+            if (match) if (elm.name.toLowerCase() != query) return;
             elm.id = id;
             results.push(elm);
         }
