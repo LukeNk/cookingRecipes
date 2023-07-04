@@ -13,7 +13,7 @@ const recipeCouse = [
 const recipes = [
     {
         name: 'Boiled egg',
-        prepTime: 1,
+        prepTime: 0,
         cookTime: 8,
         servings: 1,
         ingredients: [
@@ -35,6 +35,17 @@ const recipes = [
             { id: 7, quantity: 6 },
             { id: 8, quantity: 300 },
             { id: 9, note: '(no sugar)', quantity: 300 },
+        ]
+    },
+    {
+        name: 'Simplified mayonnaise',
+        course: 8,
+        prepTime: 0,
+        cookTime: 10,
+        servings: 2,
+        ingredients: [
+            { id: 4, quantity: 1 },
+            { id: 10, quantity: 20 }
         ]
     }
 ]

@@ -19,5 +19,6 @@ let ingredients = [
     { name: 'carrot', unit: '', type: 0 },
     { name: 'ketchup', unit: 'spoon', type: 4 },
     { name: 'tomato sauce', unit: 'ml', type: 4 },
-    { name: 'milk', unit: 'ml', type: 6 }
+    { name: 'milk', unit: 'ml', type: 6 },
+    { name: 'vinegar', unit: 'ml', type: 4 },
 ];
