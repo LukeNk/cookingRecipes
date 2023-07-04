@@ -109,7 +109,7 @@
         <div id="search">
             <label>
                 Search by name:
-                <input type="text" oninput="searchNameInput(this.value)">
+                <input id="searchNameInput" type="text" oninput="searchInput()">
             </label>
             <p>The only ingredient we assume you have is salt, peper, and ✨determination✨.</p>
             <ul id="ingredientsSearch">
@@ -124,23 +124,51 @@
 
 <script>
 // UI functions
-function searchNameInput(query) {
-    displayRecipes(nameSearch(recipes, query))
-}
-
+let ingredientSearches = [];
 
 function ingredientsSearchAdd() {
-    document.getElementById('ingredientsSearch').innerHTML += `
-    <li>
-        <input oninput="ingredientsSearchInput(this)"><span></span>
-    </li>`
+    let newLi = document.createElement('li'),
+        newInp = document.createElement('input');
+    newInp.id = `s${ingredientSearches.length}`;
+    newInp.oninput = function() { ingredientsSearchInput(this) };
+
+    newLi.appendChild(newInp);
+    newLi.appendChild(document.createElement('span'));
+    document.getElementById('ingredientsSearch').appendChild(newLi);
+
+    ingredientSearches.push('');
 }
 
 function ingredientsSearchInput(that) {
     let result = nameSearch(ingredients, that.value, true);
     let span = that.nextSibling;
-    if (result.length != 0) span.innerHTML = 'Item found';
-    else span.innerHTML = 'Item not found'
+    if (result.length != 0) {
+        span.innerHTML = 'Item found';
+        ingredientSearches[that.id.substring(1)] = result[0].id; // if item exists, push id
+    } else {
+        span.innerHTML = 'Item not found';
+        ingredientSearches[that.id.substring(1)] = that.value;
+    }
+    searchInput();
+}
+
+function searchInput() {
+    let nameInput = document.getElementById('searchNameInput').value,
+        cleanIndSearch = ingredientSearches.filter((e) => e !== '')
+    let results = nameSearch(recipes, nameInput);
+    // check if recipe have the ingredients
+    if (cleanIndSearch.length != 0)
+        for (let l1 = 0; l1 < results.length; l1++) {
+            const recipe = results[l1];
+            let matched = false;
+            for (const ingredient of recipe.ingredients)
+                if (cleanIndSearch.includes(ingredient.id)) { matched = true; break };
+            if (!matched) {
+                results.splice(l1, 1);
+                l1--;
+            }
+        }
+    displayRecipes(results)
 }
 
 function displayRecipes(recipes) {
@@ -175,6 +203,15 @@ async function displayRecipe(id) {
     const html = await response.text();
     document.getElementById(`recipe-${id}`).innerHTML += html;
 }
+
+// database init
+(() => {
+    for (const recipe of recipes)
+        for (let l1 in recipe.ingredients)
+            recipe.ingredients[l1] = {...recipe.ingredients[l1], ...ingredients[recipe.ingredients[l1].id]};
+    
+    ingredients = nameSearch(ingredients, ''); // use this function as a trick to assign id
+})();
 
 // back-end functions
 function nameSearch(source, query, match) {

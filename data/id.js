@@ -8,7 +8,7 @@ const ingredientTypes = [
     'Diary'
 ];
 
-const ingredients = [
+let ingredients = [
     { name: 'Onion', unit: 'g', type: 0 },
     { name: 'Garlic', unit: 'g', type: 0 },
     { name: 'Tomato', unit: '', type: 0 },
