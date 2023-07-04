@@ -27,7 +27,7 @@ const recipes = [
         cookTime: '3 hours',
         servings: 8,
         ingredients: [
-            { id: 5, quantity: 1 },
+            { id: 5, quantity: `1 kg` },
             { id: 2, quantity: '1 kg' },
             { id: 6, quantity: 1 },
             { id: 0, quantity: 0.5 },
