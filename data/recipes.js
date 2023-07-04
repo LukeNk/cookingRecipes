@@ -1,3 +1,15 @@
+const recipeCouse = [
+    'breakfast',
+    'main',
+    'snack',
+    'appretizer',
+    'salad',
+    'side',
+    'desserts',
+    'drink',
+    'sauce'
+]
+
 const recipes = [
     {
         name: 'Boiled egg',
@@ -9,9 +21,10 @@ const recipes = [
         ]
     }, 
     {
-        name: 'Bolognese sauce (by Peter)',
-        prepTime: 60,
-        cookTime: 180,
+        name: 'Bolognese (by Peter)',
+        course: 8,
+        prepTime: '1 hours',
+        cookTime: '3 hours',
         servings: 8,
         ingredients: [
             { id: 5, quantity: 1 },
@@ -21,7 +34,7 @@ const recipes = [
             { id: 1, quantity: '3 cloves' },
             { id: 7, quantity: 6 },
             { id: 8, quantity: 300 },
-            { id: 9, quantity: 300 },
+            { id: 9, note: '(no sugar)', quantity: 300 },
         ]
     }
 ]

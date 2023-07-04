@@ -12,22 +12,22 @@
             --color-light: #6ca6c1ff;
             --font-size: 16px;
             font-family: helvetica, arial;
+
+            /* Recipe course colors */
+            --rc0: #ffebc6ff;
+            --rc1: #003844ff;
+            --rc2: #D63230;
+            --rc3: #f194b4ff;
+            --rc4: #7FC6A4;
+            --rc5: #FAF33E;
+            --rc6: #DD6031;
+            --rc7: #247BA0;
+            --rc8: #E365C1;
         }
 
         /* Elements */
         a {
             color: var(--color-light);
-        }
-
-        article table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        article tr { border: none; }
-        article th, article td {
-            border-right: solid 1px var(--color-highlight); 
-            border-left: solid 1px var(--color-highlight);
-            text-align: center;
         }
 
         button {
@@ -68,6 +68,11 @@
 
         summary {
             cursor: pointer;
+            font-size: larger;
+            font-weight: bold;
+        }
+        summary > i {
+            font-weight: normal;
         }
 
         /* Layouts */
@@ -98,16 +103,28 @@
         main {
             padding: 1rem;
         }
+        
+        table.time {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .time tr { border: none; }
+        .time th, .time td {
+            border-right: solid 1px var(--color-highlight); 
+            border-left: solid 1px var(--color-highlight);
+            text-align: center;
+        }
+
+        .ingredients th {
+            text-align: left;
+        }
+        .ingredients td {
+            text-align: right;
+        }
     </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <button onclick="">SEARCH</button>
-            <button onclick="">BROWSE</button>
-        </nav>
-    </header>
     <main>
         <div id="search">
             <label>
@@ -156,7 +173,7 @@ function ingredientsSearchInput(that) {
 
 function searchInput() {
     let nameInput = document.getElementById('searchNameInput').value,
-        cleanIndSearch = ingredientSearches.filter((e) => e !== '')
+        cleanIndSearch = ingredientSearches.filter((e) => e !== '');
     let results = nameSearch(recipes, nameInput);
     // check if recipe have the ingredients
     if (cleanIndSearch.length != 0)
@@ -172,22 +189,33 @@ function searchInput() {
         }
     // display result
     let html = ''
-    recipes.forEach(recipe => {
+    results.forEach(recipe => {
         html += `
         <article>
-            <details id="recipe-${recipe.id}">
-                <summary>${recipe.name}</summary>
-                <table>
+            <details id="recipe-${recipe.id}" ${recipe.course? `style="border-color: var(--rc${recipe.course});"` : ''}>
+                <summary><i>${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</summary>
+                <table class="time">
                     <tr>
                         <th>Prep time</th>
                         <th>Cook time</th>
                         <th>Servings</th>
                     </tr>
                     <tr>
-                        <td>${recipe.prepTime} minutes</td>
-                        <td>${recipe.cookTime} minutes</td>
+                        <td>${typeof(recipe.prepTime) == 'string'? recipe.prepTime : recipe.prepTime + ' minutes'}</td>
+                        <td>${typeof(recipe.cookTime) == 'string'? recipe.cookTime : recipe.cookTime + ' minutes'}</td>
                         <td>${recipe.servings}</td>
                     </tr>
+                </table>
+                <h3>Ingredients</h3>
+                <table class="ingredients">`
+        recipe.ingredients.forEach(ingredient => {
+            html += `
+            <tr>
+                <td class="right"> ${ingredient.quantity} ${ingredient.unit || ''}</td>
+                <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}</th>
+            </tr>`
+        });
+        html += `
                 </table>
             </details>
         </article>`;
@@ -210,6 +238,8 @@ async function displayRecipe(id) {
             recipe.ingredients[l1] = {...recipe.ingredients[l1], ...ingredients[recipe.ingredients[l1].id]};
     
     ingredients = nameSearch(ingredients, ''); // use this function as a trick to assign id
+
+    searchInput(); // load
 })();
 
 // back-end functions

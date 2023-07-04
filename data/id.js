@@ -8,15 +8,16 @@ const ingredientTypes = [
     'Diary'
 ];
 
+// mod means modifications
 let ingredients = [
-    { name: 'onion', unit: '', type: 0 },
-    { name: 'garlic', unit: '', type: 0 },
-    { name: 'tomato', unit: '', type: 0 },
-    { name: 'potato', unit: '', type: 0 },
-    { name: 'egg', unit: '', type: 1 },
-    { name: 'beef (ground)', unit: 'g', type: 1 },
+    { name: 'onion', type: 0 },
+    { name: 'garlic', type: 0 },
+    { name: 'tomato', type: 0 },
+    { name: 'potato', type: 0 },
+    { name: 'egg', type: 1 },
+    { name: 'beef', mod: 'ground', unit: 'g', type: 1 },
     { name: 'carrot', unit: '', type: 0 },
     { name: 'ketchup', unit: 'spoon', type: 4 },
     { name: 'tomato sauce', unit: 'ml', type: 4 },
-    { name: 'milk (no sugar)', unit: 'ml', type: 6 }
+    { name: 'milk', unit: 'ml', type: 6 }
 ];
