@@ -23,7 +23,7 @@ const recipes = [
     {
         name: 'Bolognese (by Peter)',
         course: 8,
-        prepTime: '1 hours',
+        prepTime: '1 hour',
         cookTime: '3 hours',
         servings: 8,
         ingredients: [
