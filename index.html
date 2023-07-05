@@ -231,17 +231,6 @@ async function displayRecipe(id) {
     document.getElementById(`recipe-${id}`).innerHTML += html;
 }
 
-// database init
-(() => {
-    for (const recipe of recipes)
-        for (let l1 in recipe.ingredients)
-            recipe.ingredients[l1] = {...recipe.ingredients[l1], ...ingredients[recipe.ingredients[l1].id]};
-    
-    ingredients = nameSearch(ingredients, ''); // use this function as a trick to assign id
-
-    searchInput(); // load
-})();
-
 // back-end functions
 function nameSearch(source, query, match) {
     // match: exact match or not
@@ -258,4 +247,15 @@ function nameSearch(source, query, match) {
     });
     return results;
 }
+
+// initialization
+(() => {
+    for (const recipe of recipes)
+        for (let l1 in recipe.ingredients)
+            recipe.ingredients[l1] = {...recipe.ingredients[l1], ...ingredients[recipe.ingredients[l1].id]};
+    
+    ingredients = nameSearch(ingredients, ''); // use this function as a trick to assign id
+
+    searchInput(); // load
+})();
 </script>
