@@ -10,7 +10,7 @@ const recipeCouse = [
     'sauce'
 ]
 
-const recipes = [
+let recipes = [
     {
         name: 'Boiled egg',
         prepTime: 0,

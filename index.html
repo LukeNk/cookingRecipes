@@ -26,9 +26,8 @@
         }
 
         /* Elements */
-        a {
-            color: var(--color-light);
-        }
+
+        a { color: var(--color-light); }
 
         button {
             border: 0px none transparent;
@@ -39,9 +38,10 @@
 
         details {
             border-left: 1rem solid var(--color-light);
-            border-bottom: 1px solid var(--color-light);
+            border-top: 1px solid var(--color-light);
             padding-left: 1rem;
         }
+        details[open] { margin-top: 1em; }
 
         form {
             border: 1px solid var(--color-fg);
@@ -58,22 +58,14 @@
             color: var(--color-fg);
         }
 
-        p {
-            font-size: var(--font-size);
-        }
+        p { font-size: var(--font-size); }
 
-        span {
-            font-size: var(--font-size);
-        }
+        span { font-size: var(--font-size); }
 
-        summary {
-            cursor: pointer;
-            font-size: larger;
-            font-weight: bold;
-        }
-        summary > i {
-            font-weight: normal;
-        }
+        summary { cursor: pointer; }
+        summary::marker { content: none; }
+        summary > h2 { margin-top: 0; }
+        summary > h3 > i { font-weight: normal; }
 
         /* Layouts */
 
@@ -86,26 +78,16 @@
             color: var(--color-fg);
         }
 
-        nav {
-            display: flex;
-        }
-        nav > button {
-            flex: 1;
-            margin: 0;
-            height: 2rem;
-            font-size: var(--font-size);
-        }
-        nav > button:hover {
-            background-color: var(--color-light);
-            color: var(--color-theme);
-        }
+        main { padding: 1rem; }
 
-        main {
-            padding: 1rem;
+        summary > div {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
         }
         
         table.time {
-            width: 100%;
+            width: 50%;
             border-collapse: collapse;
         }
         .time tr { border: none; }
@@ -115,12 +97,8 @@
             text-align: center;
         }
 
-        .ingredients th {
-            text-align: left;
-        }
-        .ingredients td {
-            text-align: right;
-        }
+        .ingredients td { text-align: left; }
+        .ingredients th { text-align: right; }
     </style>
 </head>
 
@@ -136,7 +114,6 @@
                 <li><button onclick="ingredientsSearchAdd()">Add ingredient</button></li>
             </ul>
         </div>
-        <hr>
         <div id="browse"></div>
     </main>
 </body>
@@ -193,30 +170,33 @@ function searchInput() {
         html += `
         <article>
             <details id="recipe-${recipe.id}" ${recipe.course? `style="border-color: var(--rc${recipe.course});"` : ''}>
-                <summary><i>${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</summary>
-                <table class="time">
-                    <tr>
-                        <th>Prep time</th>
-                        <th>Cook time</th>
-                        <th>Servings</th>
-                    </tr>
-                    <tr>
-                        <td>${typeof(recipe.prepTime) == 'string'? recipe.prepTime : recipe.prepTime + ' minutes'}</td>
-                        <td>${typeof(recipe.cookTime) == 'string'? recipe.cookTime : recipe.cookTime + ' minutes'}</td>
-                        <td>${recipe.servings}</td>
-                    </tr>
-                </table>
-                <h3>Ingredients</h3>
-                <table class="ingredients">`
+                <summary>
+                    <h2><i style="color: var(--rc${recipe.course});">${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</h2>
+                    <div>
+                        <table class="ingredients">`
         recipe.ingredients.forEach(ingredient => {
             html += `
-            <tr>
-                <td class="right"> ${ingredient.quantity} ${ingredient.unit || ''}</td>
-                <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}</th>
-            </tr>`
+                            <tr>
+                                <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}:</th>
+                                <td> ${ingredient.quantity} ${(typeof(ingredient.quantity) == 'number'? ingredient.unit : '') || ''}</td>
+                            </tr>`
         });
         html += `
-                </table>
+                        </table>
+                        <table class="time">
+                            <tr>
+                                <th>Prep time</th>
+                                <th>Cook time</th>
+                                <th>Servings</th>
+                            </tr>
+                            <tr>
+                                <td>${typeof(recipe.prepTime) == 'string'? recipe.prepTime : recipe.prepTime + ' minutes'}</td>
+                                <td>${typeof(recipe.cookTime) == 'string'? recipe.cookTime : recipe.cookTime + ' minutes'}</td>
+                                <td>${recipe.servings}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </summary>
             </details>
         </article>`;
         displayRecipe(recipe.id);
@@ -255,6 +235,7 @@ function nameSearch(source, query, match) {
             recipe.ingredients[l1] = {...recipe.ingredients[l1], ...ingredients[recipe.ingredients[l1].id]};
     
     ingredients = nameSearch(ingredients, ''); // use this function as a trick to assign id
+    recipes = nameSearch(recipes, '');
 
     searchInput(); // load
 })();
