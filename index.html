@@ -113,6 +113,10 @@
             <ul id="ingredientsSearch">
                 <li><button onclick="ingredientsSearchAdd()">Add ingredient</button></li>
             </ul>
+            <label>
+                Number of additional ingredients:
+                <input type="number" oninput="ingredientFailLimit = parseInt(this.value); searchInput()" value="10">
+            </label>
         </div>
         <div id="browse"></div>
     </main>
@@ -120,7 +124,8 @@
 
 <script>
 // UI functions
-let ingredientSearches = [];
+let ingredientSearches = [],
+    ingredientFailLimit = 10;
 
 function ingredientsSearchAdd() {
     let newLi = document.createElement('li'),
@@ -153,17 +158,31 @@ function searchInput() {
         cleanIndSearch = ingredientSearches.filter((e) => e !== '');
     let results = nameSearch(recipes, nameInput);
     // check if recipe have the ingredients
-    if (cleanIndSearch.length != 0)
+    if (cleanIndSearch.length != 0) {
         for (let l1 = 0; l1 < results.length; l1++) {
             const recipe = results[l1];
-            let matched = false;
-            for (const ingredient of recipe.ingredients)
-                if (cleanIndSearch.includes(ingredient.id)) { matched = true; break };
-            if (!matched) {
+            recipe.failed = 0;
+
+            let cleanRecipeIngredients = []
+            for (const ingredient of recipe.ingredients) cleanRecipeIngredients.push(ingredient.id);
+            for (const ingredient of cleanRecipeIngredients)
+                if (cleanIndSearch.indexOf(ingredient) == -1) recipe.failed++;
+
+            for (const ingredient of cleanIndSearch)
+                if (cleanRecipeIngredients.indexOf(ingredient) == -1) { recipe.failed = Infinity; break; } // recipie don't have ingredient, eliminate
+
+            if (recipe.failed > ingredientFailLimit) {
                 results.splice(l1, 1);
                 l1--;
             }
         }
+        results.sort((a, b) => {
+            if (a.failed < b.failed) return -1;
+            else if (a.failed > b.failed) return 1;
+            else return 0;
+        });
+        console.log(results)
+    }
     // display result
     let html = ''
     results.forEach(recipe => {
