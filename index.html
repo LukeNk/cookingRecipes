@@ -161,35 +161,56 @@ function ingredientsSearchInput(that) {
 }
 
 function searchInput() {
-    let nameInput = document.getElementById('searchNameInput').value,
-        cleanIndSearch = ingredientSearches.filter((e) => e !== '');
-    let results = nameSearch(recipes, nameInput);
-    // check if recipe have the ingredients
+    let cleanIndSearch = ingredientSearches.filter((e) => e !== '');
+
+    let results = nameSearch(
+        recipes,
+        document.getElementById('searchNameInput').value
+    );
+
     if (cleanIndSearch.length != 0) {
+        // check if recipe have the ingredients
         for (let l1 = 0; l1 < results.length; l1++) {
             const recipe = results[l1];
             recipe.failed = 0;
 
             let cleanRecipeIngredients = []
-            for (const ingredient of recipe.ingredients) cleanRecipeIngredients.push(ingredient.id);
+            for (const ingredient of recipe.ingredients)
+                cleanRecipeIngredients.push(ingredient.id);
             for (const ingredient of cleanRecipeIngredients)
                 if (cleanIndSearch.indexOf(ingredient) == -1) recipe.failed++;
 
             for (const ingredient of cleanIndSearch)
-                if (cleanRecipeIngredients.indexOf(ingredient) == -1) { recipe.failed = Infinity; break; } // recipie don't have ingredient, eliminate
+                if (cleanRecipeIngredients.indexOf(ingredient) == -1) {
+                    // recipie don't have ingredient, eliminate
+                    recipe.failed = Infinity; break;
+                }
 
             if (recipe.failed > ingredientFailLimit) {
                 results.splice(l1, 1);
                 l1--;
             }
         }
+
+        // sort result match order
         results.sort((a, b) => {
             if (a.failed < b.failed) return -1;
             else if (a.failed > b.failed) return 1;
             else return 0;
         });
     }
-    // display result
+
+    // if the eleemnts already exist
+    if (document.getElementById('browse').innerHTML) {
+        for (const l1 in results) results[l1] = results[l1].id; // reduce to ID
+
+        for (const l1 in recipes)
+            document.getElementById(`recipe-${l1}`).style.display =
+                results.includes(~~l1)? '' : 'none'; // if it is in the result
+        return;
+    }
+
+    // initialize result by creating elements
     let html = '';
     results.forEach(recipe => {
         html += `
@@ -239,9 +260,7 @@ function nameSearch(source, query, match) {
     let results = [];
     query = query.toLowerCase()
     source.forEach((elm, id) => {
-        if (
-            elm.name.toLowerCase().search(query) != -1
-        ) {
+        if (elm.name.toLowerCase().search(query) != -1) {
             if (match) if (elm.name.toLowerCase() != query) return;
             elm.id = id;
             results.push(elm);
