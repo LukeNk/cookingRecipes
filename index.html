@@ -198,14 +198,14 @@ function searchInput() {
                 <h2><i style="color: var(--rc${recipe.course});">${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</h2>
                 <div>
                     <table class="ingredients">`
-    recipe.ingredients.forEach(ingredient => {
-        html += `
+        recipe.ingredients.forEach(ingredient => {
+            html += `
                         <tr>
                             <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}:</th>
                             <td> ${ingredient.quantity} ${(typeof(ingredient.quantity) == 'number'? ingredient.unit : '') || ''}</td>
                         </tr>`
-    });
-    html += `
+        });
+        html += `
                     </table>
                     <table class="time">
                         <tr>
