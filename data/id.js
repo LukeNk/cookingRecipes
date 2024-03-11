@@ -11,7 +11,7 @@ const ingredientTypes = [
 // mod means modifications
 let ingredients = [
     { name: 'onion', type: 0 },
-    { name: 'garlic', type: 0 },
+    { name: 'garlic', unit: 'clove', type: 0 },
     { name: 'tomato', type: 0 },
     { name: 'potato', type: 0 },
     { name: 'egg', type: 1 },
@@ -21,4 +21,5 @@ let ingredients = [
     { name: 'tomato sauce', unit: 'ml', type: 4 },
     { name: 'milk', unit: 'ml', type: 6 },
     { name: 'vinegar', unit: 'ml', type: 4 },
+    { name: 'rice', unit: 'cup', type: 3 },
 ];

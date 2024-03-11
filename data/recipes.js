@@ -19,7 +19,7 @@ let recipes = [
         ingredients: [
             { id: 4, quantity: 1 }
         ]
-    }, 
+    },
     {
         name: 'Bolognese (by Peter)',
         course: 8,
@@ -31,7 +31,7 @@ let recipes = [
             { id: 2, quantity: '1 kg' },
             { id: 6, quantity: 1 },
             { id: 0, quantity: 0.5 },
-            { id: 1, quantity: '3 cloves' },
+            { id: 1, quantity: 3 },
             { id: 7, quantity: 6 },
             { id: 8, quantity: 300 },
             { id: 9, note: '(no sugar)', quantity: 300 },
@@ -46,6 +46,17 @@ let recipes = [
         ingredients: [
             { id: 4, quantity: 1 },
             { id: 10, quantity: 20 }
+        ]
+    },
+    {
+        name: 'Leftover soup risotto',
+        course: 3,
+        prepTime: 5,
+        cookTime: 20,
+        servings: 1,
+        ingredients: [
+            { id: 0, quantity: 0.5 },
+            { id: 1, quantity: 1 }
         ]
     }
 ]
