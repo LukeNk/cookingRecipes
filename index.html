@@ -190,40 +190,38 @@ function searchInput() {
         });
     }
     // display result
-    let html = ''
+    let html = '';
     results.forEach(recipe => {
         html += `
-        <article>
-            <details id="recipe-${recipe.id}" ${recipe.course? `style="border-color: var(--rc${recipe.course});"` : ''}>
-                <summary>
-                    <h2><i style="color: var(--rc${recipe.course});">${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</h2>
-                    <div>
-                        <table class="ingredients">`
-        recipe.ingredients.forEach(ingredient => {
-            html += `
-                            <tr>
-                                <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}:</th>
-                                <td> ${ingredient.quantity} ${(typeof(ingredient.quantity) == 'number'? ingredient.unit : '') || ''}</td>
-                            </tr>`
-        });
+        <details id="recipe-${recipe.id}" ${recipe.course? `style="border-color: var(--rc${recipe.course});"` : ''}>
+            <summary>
+                <h2><i style="color: var(--rc${recipe.course});">${recipe.course? `[${recipeCouse[recipe.course]}]` : ``}</i> ${recipe.name}</h2>
+                <div>
+                    <table class="ingredients">`
+    recipe.ingredients.forEach(ingredient => {
         html += `
-                        </table>
-                        <table class="time">
-                            <tr>
-                                <th>Prep time</th>
-                                <th>Cook time</th>
-                                <th>Servings</th>
-                            </tr>
-                            <tr>
-                                <td>${typeof(recipe.prepTime) == 'string'? recipe.prepTime : recipe.prepTime + ' minutes'}</td>
-                                <td>${typeof(recipe.cookTime) == 'string'? recipe.cookTime : recipe.cookTime + ' minutes'}</td>
-                                <td>${recipe.servings}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </summary>
-            </details>
-        </article>`;
+                        <tr>
+                            <th><i>${ingredient.mod || ''}</i> ${ingredient.name} ${ingredient.note || ''}:</th>
+                            <td> ${ingredient.quantity} ${(typeof(ingredient.quantity) == 'number'? ingredient.unit : '') || ''}</td>
+                        </tr>`
+    });
+    html += `
+                    </table>
+                    <table class="time">
+                        <tr>
+                            <th>Prep time</th>
+                            <th>Cook time</th>
+                            <th>Servings</th>
+                        </tr>
+                        <tr>
+                            <td>${typeof(recipe.prepTime) == 'string'? recipe.prepTime : recipe.prepTime + ' minutes'}</td>
+                            <td>${typeof(recipe.cookTime) == 'string'? recipe.cookTime : recipe.cookTime + ' minutes'}</td>
+                            <td>${recipe.servings}</td>
+                        </tr>
+                    </table>
+                </div>
+            </summary>
+        </details>`;
         displayRecipe(recipe.id);
     });
     document.getElementById('browse').innerHTML = html;
